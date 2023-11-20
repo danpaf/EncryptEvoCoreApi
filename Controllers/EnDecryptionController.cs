@@ -15,31 +15,36 @@ namespace EncryptEvoCoreApi.Controllers
             _encryptLogic = new EncryptLogic();
         }
 
-        [HttpPost("Encrypt")]
-        public IActionResult EncryptData([FromForm] string data, [FromForm] string k, [FromForm] string IV)
+        [HttpPost("EncryptSha256")]
+        public IActionResult EncryptSha256([FromBody] string data)
         {
             try
             {
-                if (!string.IsNullOrEmpty(k) && !string.IsNullOrEmpty(IV))
+                string encryptedData = _encryptLogic.EncryptDataSha256(data);
+                return Ok(new
                 {
+                    Method = "SHA256 Encryption",
+                    EncryptedData = encryptedData
+                });
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, "Error encrypting data: " + ex.Message);
+            }
+        }
+        [HttpPost("EncryptAes")]
+        public IActionResult EncryptData([FromForm] string data)
+        {
+            try
+            {
                     var encryptedData = _encryptLogic.EncryptAESWithGeneratedKeyAndIV(data);
                     return Ok(new 
                     {
                         Method = "AES Encryption",
                         EncryptedData = encryptedData.encryptedData,
-                        GeneratedKey = Convert.ToBase64String(encryptedData.generatedKey),
-                        GeneratedIV = Convert.ToBase64String(encryptedData.generatedIV)
+                        GeneratedKey = "Auto Generated KEY: " + Convert.ToBase64String(encryptedData.generatedKey),
+                        GeneratedIV = "Auto Generated IV: " + Convert.ToBase64String(encryptedData.generatedIV)
                     });
-                }
-                else
-                {
-                    string encryptedData = _encryptLogic.EncryptDataSha256(data);
-                    return Ok(new 
-                    {
-                        Method = "SHA256 Encryption",
-                        EncryptedData = encryptedData
-                    });
-                }
             }
             catch (Exception ex)
             {

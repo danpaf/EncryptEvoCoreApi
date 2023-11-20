@@ -3,6 +3,7 @@ using EncryptEvoCoreApi.Controllers;
 using EncryptEvoCoreApi.Logic;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
+using Xunit;
 
 namespace EncryptEvoCoreApi.EncryptEvoCoreApi.Tests;
 
