@@ -79,7 +79,7 @@ jobs:
 
     # Execute all unit tests in the solution
     - name: Execute unit tests
-      working-directory: EncryptEvoCoreApi/EncryptEvoCoreApi.Tests
+      working-directory: EncryptEvoCoreApi\EncryptEvoCoreApi.Tests
       run: dotnet test
 
     # Restore the application to populate the obj folder with RuntimeIdentifiers
