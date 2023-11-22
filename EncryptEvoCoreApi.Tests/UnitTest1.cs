@@ -9,8 +9,13 @@ namespace EncryptEvoCoreApi.EncryptEvoCoreApi.Tests;
 
 public class UnitTest1
 {
+    private static byte[] _encryptedkey;
+    private static byte[] _encryptediv;
+
+    private static byte[] _encryptedData;
+
     /*private readonly EncryptLogic _encryptLogic;
-    
+
     public UnitTest1(EncryptLogic encryptLogic)
     {
         _encryptLogic = encryptLogic ?? throw new ArgumentNullException(nameof(encryptLogic));
@@ -26,18 +31,21 @@ public class UnitTest1
         Assert.NotNull(encryptedData);
     }
 
-    
+
     [Fact]
     public void EncryptDataWithCustomKeyAndIV_ValidInput_ReturnsEncryptedData()
     {
         var _encryptLogic = new EncryptLogic();
         string data = "Hello, World!";
-        string key = "K70MvBiNRuPf+IzdPb//UoPUp6Wpg96vwi5Lr3Qw82Y="; 
+        string key = "K70MvBiNRuPf+IzdPb//UoPUp6Wpg96vwi5Lr3Qw82Y=";
         string IV = "foOZt4Dl/SKiDzDPXtHF6Q==";
 
-        string encryptedData = _encryptLogic.EncryptDataWithCustomKeyAndIV(data, key, IV);
+        var encryptedData = _encryptLogic.EncryptAESWithGeneratedKeyAndIV(data);
 
-        Assert.NotNull(encryptedData);
+        Assert.NotNull(encryptedData.encryptedData);
+        _encryptedData = encryptedData.encryptedData; 
+        _encryptedkey = encryptedData.generatedKey;
+        _encryptediv = encryptedData.generatedIV;
     }
 
 
@@ -45,15 +53,14 @@ public class UnitTest1
     public void DecryptDataWithCustomKeyAndIV_ValidInput_ReturnsDecryptedData()
     {
         var _encryptLogic = new EncryptLogic();
-        string originalData = "Hello,World!";
-        string key = "D0yRi6NJEsUXxTAt3EHmyREclISh1szlyyUbh8Qo0BQ="; 
-        string IV = "1nhAkHiTy+xWjNNYNOkQJw==";
-        string encryptedData = _encryptLogic.EncryptDataWithCustomKeyAndIV(originalData, key, IV);
+        string originalData = "Hello, World!";
+        var encryptedData = Convert.ToBase64String(_encryptedData);
+        var encryptedKey = Convert.ToBase64String(_encryptedkey);
+        var encryptediv = Convert.ToBase64String(_encryptediv);
 
-        string decryptedData = _encryptLogic.DecryptAESWithKeyAndIV(encryptedData, key, IV);
+        string decryptedData = _encryptLogic.DecryptAESWithKeyAndIV(encryptedData, encryptedKey, encryptediv);
 
         Assert.NotNull(decryptedData);
-        /*Assert.Equal(originalData, decryptedData);*/
+        Assert.Equal(originalData, decryptedData);
     }
-
 }
